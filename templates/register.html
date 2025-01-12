@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Face Recognition Registration</title>
+</head>
+<body>
+    <div class='flex justify-center pt-8 bg-red-200 h-[100vh] w-[100vw]'>
+        <div class="container w-[35vw] h-fit border-2 border-red-900">
+            <form id='register-form' action="" class="flex flex-col items-center py-4 h-full bg-white">
+                <div class="camera-container flex flex-col items-center mb-2 space-y-2 h-fit w-full">
+                    <h2 class='text-stone-700 text-[27px] font-bold'>Register with Face Recognition</h2>
+                    <input type="text" class='py-2 px-2 rounded-lg border border-stone-300 w-[73%]' placeholder="Username" required>
+                    <video id='video' src="" class='bg-stone-600 px-4' autoplay></video>
+                    <button id='capture-button' type='button' class='bg-green-600 text-white py-2 px-2 rounded-md'>Capture Face</button>
+                    <canvas id='canvas' width='50' height='90' class='hidden border border-blue-400'></canvas>
+                </div>
+                <button type='submit' class='bg-blue-700 text-white w-[90%] py-2 px-2 rounded-md'>Register</button>
+            </form>
+            <div id="message" class='flex justify-center'>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    const video = document.getElementById('video')
+    const canvas = document.getElementById('canvas')
+    const captureButton = document.getElementById('capture-button')
+    const registerForm = document.getElementById('register-form')
+    const messageDiv = document.getElementById('message')
+    
+    let capturedImage = null
+    
+    navigator.mediaDevices.getUserMedia({video:true})
+    .then(stream=>{
+        video.srcObject = stream
+    }).catch(err=>{
+        console.log("Error accessing your camera")
+        messageDiv.innerHTML = 'Camera not accessible.'
+    })
+    
+    captureButton.addEventListener('click',()=>{
+        if(!video.srcObject){
+            messageDiv.innerHTML = 'Please allow access to your camera.'
+            return
+        }
+        const context = canvas.getContext('2d')
+        context.drawImage(video, 0, 0, canvas.width, canvas.width)
+        capturedImage = canvas.toDataURL('image/jpeg');
+        messageDiv.innerHTML = 'Face captured successfully'
+    })
+</script>
+
+</html>
