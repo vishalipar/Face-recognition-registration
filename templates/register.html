@@ -12,7 +12,7 @@
             <form id='register-form' action="" class="flex flex-col items-center py-4 h-full bg-white">
                 <div class="camera-container flex flex-col items-center mb-2 space-y-2 h-fit w-full">
                     <h2 class='text-stone-700 text-[27px] font-bold'>Register with Face Recognition</h2>
-                    <input type="text" class='py-2 px-2 rounded-lg border border-stone-300 w-[73%]' placeholder="Username" required>
+                    <input type="text" name='username' class='py-2 px-2 rounded-lg border border-stone-300 w-[73%]' placeholder="Username" required>
                     <video id='video' src="" class='bg-stone-600 px-4' autoplay></video>
                     <button id='capture-button' type='button' class='bg-green-600 text-white py-2 px-2 rounded-md'>Capture Face</button>
                     <canvas id='canvas' width='50' height='90' class='hidden border border-blue-400'></canvas>
@@ -52,6 +52,24 @@
         capturedImage = canvas.toDataURL('image/jpeg');
         messageDiv.innerHTML = 'Face captured successfully'
     })
+    
+    registerForm.onsubmit = async (e) =>{
+        e.preventDefault()
+        
+        if(!capturedImage){
+            messageDiv.innerHTML = 'Please capture a face first.'
+            return
+        }
+        const formData = new FormData(registerForm)
+        formData.append('face_image', capturedImage)
+        const response = await fetch('/register/',{
+            method : 'POST',
+            body : formData
+        });
+        
+        const data = await response.data();
+        messageDiv.innerText = data.mediaDevices || 'Registration Failed';
+    }
 </script>
 
 </html>
