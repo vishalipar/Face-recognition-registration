@@ -1,0 +1,1 @@
+User register's with username and face capturing, after face get captured it shows message of face captured successfully. This credentials get stored at backend and if he/she again tries to get register with same username then it shows error message of username already exists.
